@@ -17,7 +17,8 @@ export function AppShell() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const publicPaths = ['/', '/consent', '/about', '/careers'];
+    // /share 为访客功能（输入好友分享码临时查看结果），无需知情同意
+    const publicPaths = ['/', '/consent', '/about', '/careers', '/share'];
     if (!state.consent.accepted && !publicPaths.includes(location.pathname)) {
       navigate('/consent', { replace: true });
     }
