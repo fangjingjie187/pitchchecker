@@ -96,7 +96,14 @@ npm run preview
 
 ## 部署
 
-- **平台**：EdgeOne Pages（EdgeOne Makers），纯静态托管，`vite build` 产物 `dist/` 直接上传。
+### 正式演示链接（大陆可直接访问，分享码跨设备还原可用）
+
+- **平台**：帽子云（国产静态托管，免费）
+- **线上地址**：`https://4sg6hn3dp-favicon-37oj34y.maozi.io`
+- **部署方式**：Gitee 私有仓库 `fjj3325874170/career-compass` → 帽子云授权 Gitee → 选仓库 master 分支自动构建（自动识别 Vite，`npm run build` → `dist`）。
+
+### 备选：EdgeOne Pages（腾讯云官方）
+
 - **线上域名**：`https://career-compass-pcxjjusa.edgeone.cool`
 - **控制台**：`https://console.cloud.tencent.com/edgeone/pages/project/makers-ovy31x9wq9pm`
 - 部署命令（登录后）：
@@ -106,7 +113,7 @@ npm run build
 npx edgeone makers deploy dist --name career-compass --env production
 ```
 
-> 访问说明：EdgeOne Pages 默认域名 `*.edgeone.cool` 在中国大陆网络下**不能直接访问**（返回 401），须使用「预览链接」（控制台项目概览右上角「预览」按钮，或每次 `deploy` 返回的 `?eo_token=` 链接，**3 小时有效**）。要获得长期公开链接，需绑定**自定义域名**（面向大陆需备案域名；面向海外可选「全球可用区（不含中国大陆）」则无需备案）。
+> EdgeOne Pages 默认域名 `*.edgeone.cool` 在中国大陆网络下**不能直接访问**（返回 401），须使用「预览链接」（控制台项目概览右上角「预览」按钮，或每次 `deploy` 返回的 `?eo_token=` 链接，**3 小时有效**）；长期公开访问需绑定自定义域名（大陆需备案）。
 
 ---
 
