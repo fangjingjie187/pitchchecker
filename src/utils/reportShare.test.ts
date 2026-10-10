@@ -3,7 +3,7 @@ import { createInitialState } from '@/store/persistence';
 import { DEMO_PERSONAS } from '@/data/demoPersonas';
 import { fillPersonaModule } from '@/domain/personaFiller';
 import { buildReport } from '@/domain/buildReport';
-import { reportToSharePayload } from './reportShare';
+import { reportToSharePayload, sharePayloadToSummary } from './reportShare';
 import { decodeShareCode, encodeShareCode } from './shareCode';
 import { MODULES } from '@/config/modules';
 import type { AppState, ModuleKey } from '@/types';
@@ -53,5 +53,30 @@ describe('报告分享码', () => {
     const code = encodeShareCode(reportToSharePayload(report));
     expect(code).not.toContain('小罗');
     expect(code).not.toMatch(/school|name|学校/i);
+  });
+
+  it('能力向量按固定维度顺序（verbal 首位），与报告维度名精确对应', () => {
+    const report = buildReport(fullState(), '15-16');
+    const payload = reportToSharePayload(report);
+    const summary = sharePayloadToSummary(payload);
+
+    // 首位必须是 verbal 言语表达，而不是"得分最高的那个维度"
+    expect(summary.abilities[0].key).toBe('verbal');
+    expect(summary.abilities[0].name).toBe('言语表达');
+    const verbal = report.ability?.dimensions.find((d) => d.key === 'verbal');
+    expect(summary.abilities[0].score).toBe(Math.round(verbal?.mean ?? 0));
+  });
+
+  it('sharePayloadToSummary 还原出完整维度名与分数', () => {
+    const report = buildReport(fullState(), '15-16');
+    const payload = reportToSharePayload(report);
+    const summary = sharePayloadToSummary(payload);
+
+    expect(summary.holland).toBe(payload.holland);
+    expect(summary.interests.map((d) => d.score)).toEqual(payload.interests);
+    expect(summary.abilities.map((d) => d.score)).toEqual(payload.abilities);
+    expect(summary.adaptability.map((d) => d.score)).toEqual(payload.adaptability);
+    expect(summary.values).toHaveLength(3);
+    expect(summary.values.every((v) => v.name.length > 0)).toBe(true);
   });
 });

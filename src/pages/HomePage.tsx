@@ -54,6 +54,12 @@ export default function HomePage() {
               >
                 先看看理论依据
               </Link>
+              <Link
+                to="/share"
+                className="text-sm font-medium text-coral-700 underline-offset-4 hover:underline"
+              >
+                有分享码？查看结果
+              </Link>
             </div>
 
             {started ? (

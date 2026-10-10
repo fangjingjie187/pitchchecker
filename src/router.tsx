@@ -7,6 +7,7 @@ import AssessmentHubPage from '@/pages/AssessmentHubPage';
 import AssessmentPage from '@/pages/AssessmentPage';
 import ComputingPage from '@/pages/ComputingPage';
 import ReportPage from '@/pages/ReportPage';
+import ShareReportPage from '@/pages/ShareReportPage';
 import CareersPage from '@/pages/CareersPage';
 import HistoryPage from '@/pages/HistoryPage';
 import AboutPage from '@/pages/AboutPage';
@@ -22,6 +23,7 @@ export function AppRoutes() {
         <Route path="/assess/:moduleKey" element={<AssessmentPage />} />
         <Route path="/computing" element={<ComputingPage />} />
         <Route path="/report" element={<ReportPage />} />
+        <Route path="/share" element={<ShareReportPage />} />
         <Route path="/careers" element={<CareersPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/about" element={<AboutPage />} />
