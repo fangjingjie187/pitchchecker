@@ -1,0 +1,52 @@
+/* 报告打印 / 导出 PDF 专用样式（window.print 方案，零依赖） */
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #12212e !important;
+  }
+
+  /* 打印时隐藏：导航、按钮、提示条、页脚交互区 */
+  .no-print,
+  .app-header,
+  .app-footer nav,
+  .report-toolbar,
+  .toast-host {
+    display: none !important;
+  }
+
+  /* 仅在打印时出现的元素（如报告页脚免责声明的纸质版） */
+  .print-only {
+    display: block !important;
+  }
+
+  .report-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .surface,
+  .card-print {
+    box-shadow: none !important;
+    border: 1px solid #d7e6ef !important;
+  }
+
+  /* 图表底色在打印时统一为浅色，避免深色背景吞墨 */
+  .echart-print,
+  canvas {
+    background: #ffffff !important;
+  }
+
+  a[href]:after {
+    content: '';
+  }
+}
+
+.print-only {
+  display: none;
+}

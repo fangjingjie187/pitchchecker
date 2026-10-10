@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-mist text-ink-900 font-sans antialiased;
+  }
+
+  /* 中文排版：标题与正文行高差异化 */
+  h1,
+  h2,
+  h3 {
+    @apply text-ink-900;
+    line-height: 1.35;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  /* 键盘可达性：统一焦点样式 */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-400 ring-offset-2 ring-offset-white rounded-md;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .surface {
+    @apply bg-paper rounded-xl2 shadow-card border border-brand-100/70;
+  }
+
+  .text-muted {
+    @apply text-ink-500;
+  }
+
+  /* 打印时隐藏交互控件 */
+  .no-print {
+    print-color-adjust: exact;
+  }
+
+  /*
+   * D2：滑条（等高法重写）。
+   * 关键设计：::-webkit-slider-runnable-track 与 ::-webkit-slider-thumb 等高（均 20px），
+   * thumb 在 track 内滑动时天然几何居中——不使用任何 margin / calc 修正，
+   * 缩放与 DPR 变化下圆心恒贴轨道中心线。
+   * 轨道"细线"视觉由 track 背景的居中 linear-gradient 绘制（垂直居中 4px 高），
+   * 已填充进度由 JS 按值更新 --slider-pct 百分比。
+   * 两端各缩进 thumb 半径（padding 0 10px），保证 value=0/100 时 thumb 完整落在容器内，
+   * 且细线（track 宽度 = content box）与 thumb 行程严格对齐。
+   */
+  .cc-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 20px;
+    width: 100%;
+    cursor: pointer;
+    padding: 0 10px;
+    background: transparent;
+    border-radius: 9999px;
+  }
+
+  .cc-slider:focus-visible {
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.22);
+  }
+
+  .cc-slider::-webkit-slider-runnable-track {
+    height: 20px;
+    border-radius: 9999px;
+    background:
+      linear-gradient(to right, #0ea5e9 var(--slider-pct, 0%), #dcf1fc var(--slider-pct, 0%))
+      no-repeat center / 100% 4px;
+  }
+
+  .cc-slider[data-unanswered='true']::-webkit-slider-runnable-track {
+    background: #dcf1fc no-repeat center / 100% 4px;
+  }
+
+  .cc-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    height: 20px;
+    width: 20px;
+    border-radius: 9999px;
+    border: 3px solid #fff;
+    background: #0ea5e9;
+    box-shadow:
+      0 1px 2px rgba(18, 33, 46, 0.08),
+      0 8px 24px -12px rgba(12, 74, 110, 0.4);
+    transition: background-color 0.15s ease;
+  }
+
+  .cc-slider[data-unanswered='true']::-webkit-slider-thumb {
+    background: #8296aa;
+  }
+
+  /* Gecko：thumb 自动垂直居中，无需 margin；进度填充同样用 --slider-pct 渐变 */
+  .cc-slider::-moz-range-track {
+    height: 20px;
+    border-radius: 9999px;
+    background:
+      linear-gradient(to right, #0ea5e9 var(--slider-pct, 0%), #dcf1fc var(--slider-pct, 0%))
+      no-repeat center / 100% 4px;
+  }
+
+  .cc-slider[data-unanswered='true']::-moz-range-track {
+    background: #dcf1fc no-repeat center / 100% 4px;
+  }
+
+  .cc-slider::-moz-range-thumb {
+    box-sizing: border-box;
+    height: 20px;
+    width: 20px;
+    border-radius: 9999px;
+    border: 3px solid #fff;
+    background: #0ea5e9;
+    box-shadow:
+      0 1px 2px rgba(18, 33, 46, 0.08),
+      0 8px 24px -12px rgba(12, 74, 110, 0.4);
+  }
+
+  .cc-slider[data-unanswered='true']::-moz-range-thumb {
+    background: #8296aa;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* 无障碍：尊重系统"减少动态效果"偏好 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-ssr
+.vite
+coverage
+*.local
+.DS_Store
+Thumbs.db
+*.log
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# 测试与打包产物
+.playwright-cli/
+career-compass-dist.zip
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+.tef_dist/*
+  

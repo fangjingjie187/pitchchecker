@@ -1,0 +1,40 @@
+{
+  "name": "career-compass",
+  "private": true,
+  "version": "1.0.2",
+  "type": "module",
+  "description": "生涯罗盘 · 面向高中生的生涯探索与自我认知测评工具（参赛演示版）",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "validate": "tsx scripts/validate.ts",
+    "sample": "tsx scripts/generateSample.ts",
+    "review": "tsx scripts/generateReviewDoc.ts",
+    "psychometrics": "tsx scripts/generatePsychometrics.ts"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "echarts": "^5.5.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^25.0.0",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.11",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.5",
+    "vitest": "^2.1.1"
+  }
+}
