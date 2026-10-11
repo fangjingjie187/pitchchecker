@@ -21,7 +21,15 @@ export function ReportToolbar({ report }: { report: Report }) {
   const [shareCode, setShareCode] = useState<string | null>(null);
 
   const generateShare = () => {
-    setShareCode(encodeShareCode(reportToSharePayload(report)));
+    try {
+      const code = encodeShareCode(reportToSharePayload(report));
+      if (!code) throw new Error('编码结果为空');
+      setShareCode(code);
+    } catch (err) {
+      // 防御：真实浏览器若因数据/环境差异抛异常，显式暴露而非静默无响应
+      const message = err instanceof Error ? err.message : String(err);
+      toast(`生成分享码失败：${message}`, 'error');
+    }
   };
 
   return (
