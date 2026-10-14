@@ -2,6 +2,19 @@
 
 本项目按里程碑迭代，10 月 24 日为代码冻结线。版本 1.0.0 为参赛演示冻结版。
 
+## v1.0.3（2026-10-14）
+
+### 试测修复轮（6 人试测 · 5 份有效反馈）
+- **T 组文案**：V-FC-01 题干/选项改写、V-achievement-01 改写、I-A-02 去否定式补语、价值观引导语补少年语境示例、完成小结与过渡文案"说人话"（warmup 小结点明「下一模块 + 用途」）
+- **域名定性修正**：README 明确主域名 `favicon-37oj34y.maozi.io` 固定、快照域名才变，附 D1–D6 部署编号
+- **fixed 元素审计**：`PageTransition` 的 `animate-fade-up` 去掉 transform 残留（改为纯 opacity），根除 PageTransition 内 fixed 元素被 transform 劫持的隐患
+- **测试规范升级**：Modal 补 portal 可见性单测；README 固化 overlay/fixed 组件「视口内 bounding box + opacity」断言规范
+
+## v1.0.2（2026-10-11）
+
+- 分享码跨设备还原上线（`/share` 简版报告 + 还原页豁免知情同意门禁）
+- 分享码 Modal 灰屏修复（createPortal 挂 body，脱离 PageTransition transform 祖先）
+
 ## v1.0.0（2026-10-10）
 
 ### M1 · 骨架

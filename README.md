@@ -99,8 +99,10 @@ npm run preview
 ### 正式演示链接（大陆可直接访问，分享码跨设备还原可用）
 
 - **平台**：帽子云（国产静态托管，免费）
-- **线上地址**：以帽子云控制台应用详情里标记「**当前版本**」的域名为准（`*.maozi.io`）。注意：**每次部署都会生成一个新的随机子域名**（历史部署域名仍可访问，指向对应那次内容），分享/演示时请从控制台复制当前版本的域名。
-- **部署方式**：Gitee 私有仓库 `fjj3325874170/career-compass` → 帽子云授权 Gitee → 选仓库 master 分支自动构建（自动识别 Vite，`npm run build` → `dist`）。
+- **稳定主域名（长期链接 / 二维码用这个）**：`https://favicon-37oj34y.maozi.io` —— 应用级固定地址，**每次 push 部署内容自动更新、域名不变**，始终指向最新构建。对外发放链接、二维码请一律用这个主域名。
+- **快照域名（勿用作长期链接）**：每次部署会额外生成一个 `随机前缀-favicon-37oj34y.maozi.io` 快照，永久冻结在该次提交的内容（历史快照可访问但不会更新）。之前误把快照地址当正式链接发放是错的（如 `dmcmliz4k…` 指向旧版）。
+- **部署方式**：Gitee 仓库 `fjj3325874170/career-compass` → 帽子云授权 Gitee → 选 master 分支自动构建（自动识别 Vite，`npm run build` → `dist`），push 即部署。
+- **部署编号（依 push 时间序）**：D1 `f672f54` v1.0.2 首版（快照 `4sg6hn3dp`）→ D2 `989e394` docs 演示链接（快照 `f5i988inn`）→ D3 `a8e504a` 分享码还原入口（快照 `jil34ya21`）→ D4 `e5d8f28` 还原页门禁（快照 `dmcmliz4k`）→ D5 `4b6181a` docs 域名说明（快照 `sex9vzvv0`）→ D6 `ca78cec` Modal 灰屏修复（快照 `ag7h4ji20`，当前版本）。快照域名可在控制台「应用管理 → favicon」部署列表查到。
 
 ### 备选：EdgeOne Pages（腾讯云官方）
 
@@ -133,6 +135,7 @@ npx edgeone makers deploy dist --name career-compass --env production
 - **用例间强制清空 localStorage**：每个用例开始前必须清空本机存储（推荐走页脚「清除本机全部数据」——直接 `localstorage-clear` + reload 会被应用 `beforeunload` 回写内存态而失效），杜绝演示填充残留污染判定。
 - **跳转类测试必须断言目的地 UI 内容，不得只断言 URL**：SPA 内部导航不重挂载组件，URL 正确 ≠ 界面正确（C2 教训：URL 到达 `/assess/interest`，但界面残留上一模块的完成态）。跳转用例须断言目的地的题干预文本或界面状态。
 - **「点击导航」与「goto」分开覆盖**：`goto` 是完整加载（组件重挂载、状态重新初始化），点按钮是 SPA 导航（组件复用、状态保留），两者行为可能不同，跳转链路需各覆盖一次。
+- **overlay / fixed / portal 组件必须断言「视口内 bounding box + opacity」，不得只断言 DOM 存在**：分享码 Modal 灰屏教训——snapshot 只验证了 `role="dialog"` 存在与文本，但弹窗因 `<PageTransition>` 的 transform 祖先被推到视口外（`top≈3223px`）且动画未推进（`opacity=0`），视觉不可见。此类组件复验须在**前台页面、动画走完后**采样：`getBoundingClientRect()` 落在视口内 且 `getComputedStyle().opacity === '1'`，并确认 portal 组件 `parentElement === document.body`。
 
 ---
 

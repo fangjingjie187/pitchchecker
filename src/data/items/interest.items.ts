@@ -68,7 +68,7 @@ export const INTEREST_ITEMS: AssessmentItem[] = [
     id: 'I-A-02',
     dimension: 'A',
     type: 'likert5',
-    text: '设计一个独特的作品或方案，不愿意照着现成的模板来。',
+    text: '自己动手设计一个独一无二的作品，而不是照着现成的模板做。',
   },
   {
     id: 'I-A-03',

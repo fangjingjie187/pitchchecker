@@ -16,7 +16,7 @@ export const VALUE_ITEMS: AssessmentItem[] = [
     id: 'V-achievement-01',
     dimension: 'achievement',
     type: 'likert5',
-    text: '能做出实实在在的成绩，让人看到"这件事是我做成的"。',
+    text: '做出让人佩服的成果，让大家看到"这件事是我做成的"。',
   },
   {
     id: 'V-independence-01',
@@ -60,12 +60,12 @@ export const VALUE_ITEMS: AssessmentItem[] = [
     id: 'V-FC-01',
     dimension: 'reward',
     type: 'forcedChoice',
-    text: '毕业时有三份工作摆在面前，如果只能凭一点来选，你最看重哪一点？',
+    text: '想象毕业时同时有三份工作可选，只能比较一个方面，你会先看哪个？',
     subText: '只能选一个。',
     options: [
-      { id: 'V-FC-01-a', label: '收入高、待遇好', dimension: 'reward' },
-      { id: 'V-FC-01-b', label: '稳定有保障，不用担惊受怕', dimension: 'security' },
-      { id: 'V-FC-01-c', label: '能做出成绩，被人看到', dimension: 'achievement' },
+      { id: 'V-FC-01-a', label: '赚得多不多', dimension: 'reward' },
+      { id: 'V-FC-01-b', label: '稳定、不容易失业', dimension: 'security' },
+      { id: 'V-FC-01-c', label: '能做出成绩', dimension: 'achievement' },
     ],
   },
   {

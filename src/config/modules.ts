@@ -111,7 +111,7 @@ export const MODULES: ModuleMeta[] = [
       'relationship',
     ],
     closingFeedback: true,
-    intro: '价值观没有高下之分，只是每个人的排序不同。它会随着年龄和经历变化。',
+    intro: '价值观没有高下之分，只是每个人的排序不同。它会随着年龄和经历变化。比如"工资高但天天加班"和"钱少点但时间自由"，你更看重哪头？',
     prompt: '这一点对你有多重要？',
   },
   {

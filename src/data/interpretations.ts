@@ -280,8 +280,8 @@ export const GRADE_BAND_HORIZON_GUIDE: Record<
 
 /** 模块完成时的即时小结反馈模板（占位符由 domain 填充） */
 export const CLOSING_FEEDBACK_TEMPLATES: Record<ModuleKey, string> = {
-  warmup: '记下你的起点了。接下来看看是什么在吸引你。',
-  interest: '你的兴趣偏向是 {topName}，它通常意味着{topHint}。',
+  warmup: '暖场完成，你的起点已保存。接下来是兴趣探索：看看哪些事你真正喜欢。',
+  interest: '你的兴趣偏向是 {topName}：{topHint}。',
   ability: '你最有信心的是{topName}，最想练一练的是{lowName}。',
   value: '你最看重的三件事是{valueList}。',
   adaptability: '你的适应力里最稳的是{topName}，最值得练的是{lowName}。',
