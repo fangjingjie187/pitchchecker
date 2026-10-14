@@ -26,8 +26,8 @@ import type { GradeBand, ModuleKey, NormEntry } from '@/types';
  */
 export const BASE_NORMS: Record<ModuleKey, Record<string, NormEntry>> = {
   warmup: {
-    // 实测锚定（2024，n=2119，15–16 段）：5 点量表 M=2.76 → (2.76−1)/4×100 ≈ 44；SD=0.64 → /4×100 = 16
-    clarity: { mean: 44, sd: 16 },
+    // 修订计分版本锚定（2024，n=2119，15–16 段）：M=2.7208 → (2.7208−1)/4×100 ≈ 43；SD=0.86426 → /4×100 ≈ 22
+    clarity: { mean: 43, sd: 22 },
     // 实测锚定：情感舒适正向 M=3.17 → 54；滑条方向为"担心程度"，反向映射 100−54 = 46；SD=0.92 → 23
     comfort: { mean: 46, sd: 23 },
     // 预估值，无实测锚定

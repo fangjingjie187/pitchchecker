@@ -1,7 +1,7 @@
 {
   "name": "career-compass",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "description": "生涯罗盘 · 面向高中生的生涯探索与自我认知测评工具（参赛演示版）",
   "scripts": {
