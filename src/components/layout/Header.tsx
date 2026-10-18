@@ -23,14 +23,18 @@ export function Header() {
     <header className="app-header sticky top-0 z-40 border-b border-brand-100 bg-paper/90 backdrop-blur">
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <NavLink to="/" className="flex items-center gap-2.5">
-          <span
-            aria-hidden
-            className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-500 text-white shadow-card"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 3v3M12 18v3M3 12h3M18 12h3" />
-              <path d="M15.5 8.5l-3 3-3 3" />
+          <span aria-hidden className="block h-9 w-9 shadow-card">
+            <svg viewBox="0 0 64 64" className="h-9 w-9 rounded-xl">
+              <defs>
+                <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stopColor="#4EB2E9" />
+                  <stop offset="1" stopColor="#1888C6" />
+                </linearGradient>
+              </defs>
+              <rect width="64" height="64" rx="15" fill="url(#logo-gradient)" />
+              <circle cx="32" cy="32" r="19.5" fill="#ffffff" />
+              <path d="M42.2 21.8 L35.3 35.3 L21.8 42.2 L28.8 28.8 Z" fill="#2191CD" />
+              <circle cx="32" cy="32" r="2.6" fill="#ffffff" />
             </svg>
           </span>
           <span>
