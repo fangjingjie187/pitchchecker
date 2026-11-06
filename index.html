@@ -12,8 +12,10 @@ h1{font-size:20px;margin-bottom:4px}
 .sub{font-size:12px;color:rgba(0,0,0,.5);margin-bottom:16px}
 .panel{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;margin-bottom:14px}
 .panel h2{font-size:14px;margin-bottom:10px}
-.api-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
-.api-row input{flex:1;height:34px;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:0 10px;font-size:13px}
+.api-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.api-row label{flex:none;white-space:nowrap}
+.api-row input{flex:1;min-width:120px;height:34px;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:0 10px;font-size:13px}
+.api-row button{flex:none;white-space:nowrap}
 button{height:34px;padding:0 14px;border:1px solid rgba(0,0,0,.12);border-radius:8px;background:#fff;font-size:13px;cursor:pointer}
 button.primary{background:#F3A04C;border-color:#F3A04C;color:#fff}
 button:disabled{opacity:.55;cursor:not-allowed}
