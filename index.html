@@ -1,18 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0EA5E9" />
-    <meta
-      name="description"
-      content="生涯罗盘：面向高中生的生涯探索工具，帮助你认识兴趣、能力自信度与工作价值观，并看到学科、选科、专业与职业之间的连接。"
-    />
-    <title>生涯罗盘 · 高中生生涯探索工具</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>直播话术说服结构检测工具 v1.3</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:#f4f4f6;color:rgba(0,0,0,.8);padding:24px}
+.app{max-width:780px;margin:0 auto}
+h1{font-size:20px;margin-bottom:4px}
+.sub{font-size:12px;color:rgba(0,0,0,.5);margin-bottom:16px}
+.panel{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;margin-bottom:14px}
+.panel h2{font-size:14px;margin-bottom:10px}
+.api-row{display:flex;gap:8px;align-items:center;margin-bottom:14px}
+.api-row input{flex:1;height:34px;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:0 10px;font-size:13px}
+button{height:34px;padding:0 14px;border:1px solid rgba(0,0,0,.12);border-radius:8px;background:#fff;font-size:13px;cursor:pointer}
+button.primary{background:#F3A04C;border-color:#F3A04C;color:#fff}
+button:disabled{opacity:.55;cursor:not-allowed}
+textarea{width:100%;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:10px;font-size:13px;resize:vertical;line-height:1.6}
+.btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+#splitList{padding-left:22px;font-size:13px;line-height:1.7;color:rgba(0,0,0,.65)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.result-table{width:100%;border-collapse:collapse;font-size:12px}
+.result-table th,.result-table td{border:1px solid rgba(0,0,0,.08);padding:6px 8px;text-align:left;vertical-align:top}
+.result-table th{background:rgba(0,0,0,.03);font-weight:600}
+td.txt{max-width:180px;line-height:1.5}
+.c-是{color:#E65C53;font-weight:600}
+.c-否{color:#40B43E}
+.c-不确定{color:#EBA400}
+.chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;margin:0 6px 4px 0;background:rgba(0,0,0,.06)}
+.chip-ok{background:rgba(64,180,62,.15);color:#40B43E}
+.chip-no{background:rgba(230,92,83,.15);color:#E65C53}
+button.ok{height:26px;padding:0 10px;font-size:12px;color:#40B43E;margin-right:4px}
+button.no{height:26px;padding:0 10px;font-size:12px;color:#E65C53}
+.hint{font-size:12px;color:rgba(0,0,0,.45)}
+.err{font-size:13px;color:#E65C53}
+#keyStatus{font-size:12px;color:rgba(0,0,0,.45)}
+.footer{font-size:12px;color:#999;text-align:center;margin-top:10px;padding:6px 0}
+@media (max-width:768px){
+  body{padding:12px}
+  .app{max-width:100%}
+  button{min-height:44px}
+  .btns{flex-direction:column;align-items:stretch}
+  .btns button{width:100%}
+  #exportBtn{width:100%}
+  .result-table{min-width:640px}
+  textarea{font-size:16px}
+  .api-row input{font-size:16px}
+  .footer{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>直播话术说服结构检测工具</h1>
+  <p class="sub">v1.3 · 输入 → 分句 → AI检测 → 人工确认 → 导出 ｜ 对齐编码手册v0.4</p>
+
+  <div class="api-row">
+    <label style="font-size:13px;flex:none">DeepSeek API Key</label>
+    <input id="apiKey" type="password" placeholder="sk-...（仅保存在本地浏览器）">
+    <button id="saveKey">保存</button>
+    <span id="keyStatus"></span>
+  </div>
+
+  <div class="panel">
+    <h2>1. 输入话术</h2>
+    <textarea id="input" rows="6" placeholder="粘贴直播话术文本。句子以。！？!?；;或换行分隔"></textarea>
+    <div class="btns">
+      <button id="fillDemo">填入示例</button>
+      <button id="splitBtn">分句</button>
+      <button id="runBtn" class="primary">AI 检测</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>2. 分句预览 <span id="splitCount" style="font-weight:400;font-size:12px;color:rgba(0,0,0,.45)"></span></h2>
+    <ol id="splitList"><li class="hint">点击“分句”后显示编号句子</li></ol>
+  </div>
+
+  <div class="panel">
+    <h2>3. 检测结果（人工确认）</h2>
+    <div id="resultArea"><p class="hint">点击“AI 检测”后结果在此显示。每条可点“通过/驳回”留痕。</p></div>
+  </div>
+
+  <div class="panel">
+    <h2>4. 导出报告</h2>
+    <button id="exportBtn">导出检测报告.txt</button>
+    <span class="hint" style="margin-left:8px">导出含人工确认状态，作为运行案例证据</span>
+  </div>
+</div>
+
+<div class="footer">本工具输出为话术说服结构提示，不构成法务意见或合规结论；检测结果需人工复核后使用。模型服务由DeepSeek提供。</div>
+
+<script>
+const API_URL='https://api.deepseek.com/chat/completions';
+const MODEL='deepseek-chat';
+
+const SYSTEM_PROMPT=`你是"直播话术说服结构检测"工具。请严格按下列规则对用户给出的直播话术逐句判定，只输出JSON。
+
+判定总原则：
+1. 仅以话语文本为限判定，不推测画面、购物车、链接中是否存在佐证。
+2. 一句可标多个手法编号（如 M03+M10）。
+3. 规则未覆盖或拿不准的标"不确定"，并说明理由，不强行归类。
+4. 不输出风险等级（由产品层处理）。
+
+手法判定键：
+M01 时间型虚假紧迫：声称时间有限（还剩X分钟、今晚结束、明天恢复原价等）且出现紧迫渲染词（马上、最后、仅剩、只保留、过时不候、倒计时、仅限、截止到、错过就没了、再不买就没了、最后X分钟、最后X小时），文本内无第三方规则背书（规则名称/规则页可查/平台规则限定）。主播自述时间不算背书。渲染判定以词表字面命中为准：命中上述渲染词表词条即视为含渲染表述（即使整体语气平实，如"价格截止到本周日"）；未命中词条即不含渲染（即使语义紧迫，如"活动价至本周日"因"至"不在词表）。不得以语气语感推翻字面命中。时间对比型损失表述（"今天不X，明天就Y"）归M08，不触发M01。反例："过了今晚恢复原价，差价就打水漂"——"过了今晚"不在渲染词表，时间陈述＋损失放大词整体归M08，不标M01。
+M02 数量型虚假稀缺：声称数量有限（最后X单、仅X件、断货、限购、配额），文本内无可核验依据。"每人限购X件，多拍系统自动退单"类限购声称即构成（手册M02示例原句），主播自述限购本身即待检声称。
+M03 无法验证的销量暗示：含具体销量/评价/排名数字（卖了X单、零差评、全网第一等），无数据来源。模糊表述（很受欢迎）不构成。多标签："零差评""全网第一"等绝对化评价词同时触发M10，两个编号都标。在线/观看人数不是销量、评价或排名数字，不触发M03。
+M04 虚假比价/虚构原价：声称原价/专柜价/全网最低，无比价依据或比较对象模糊。多标签："全网最低"同时触发M10，两个编号都标。比价对象指明"超市""商场""专柜"但不给可查价格依据的，仍构成M04；只有比价对象具体且给出可查依据（如"价格记录详情页都能查到"）才不构成。
+M05 时间压力引导：催促指令+抑制评估词（别想、别犹豫、不用纠结、不用比、闭眼入、无脑冲、听我的就行）同时出现才构成；仅有"手慢无""抓紧""倒计时"等不构成。"犹豫什么""还在犹豫"不带"别"字，不是抑制评估词，归M06。
+M06 社会认同施压：以群体行为/归属感施压（"别人都买了，就差你了""不买不合群"）。仅"手速快点"等观看催促、无"已购群体＋落单威胁"结构时，不触发M06。
+M07 权威暗示：声称专家/医生/机构/媒体报道背书但无具体来源（专家说、医生推荐、央视报道）。
+M08 损失厌恶框架：以"亏""后悔""多花X元""打水漂"等损失放大词推动决策才构成；"错过就没了""别错过""卖完不补""明天就换价"类属M01/M02的渲染或稀缺表述，不触发M08。
+M09 情感绑架：以主播处境/情感义务绑定购买（"帮主播冲一冲"）；出现"理性消费""按需购买""不买也没关系"默认不构成。"支持一下"句内出现"拍一单""能拍则拍""帮我冲"等明确购买指令时，情感+购买指令+义务绑定齐备，直接标M09构成，不判不确定；仅当"支持一下"孤立出现、句内无任何购买指令时才标"不确定"。
+M10 绝对化承诺：出现触发词即构成。绝对化16词：最、第一、顶级、极致、唯一、首个、独家、全网最低、史上最低、绝对、100%、永久、万能、根治、特效、零风险；承诺3词：保证、假一赔十、无效退款。备注按条件状态写：有具体条件内容或规则名称→"有具体条件"并摘录；仅指向页面（如"见页面说明"）→"仅指向，无具体条件"；无→"无具体条件"。"最后三单"归M02，不标M10。M10判定纪律：对每句独立扫描全部19个触发词，任一命中即标M10，即使该句已判其他手法也不得省略；未命中19词表的表述不按"效果断言"语义扩展，如"用十年没问题"类耐久性陈述不标M10。
+
+输出格式：只输出一个JSON对象，结构为 {"results":[{"id":1,"text":"原句","constitutes":"是","techniques":["M01"],"reason":"触发词与依据","replacement":"合规替换建议"}]}。constitutes取值"是"/"否"/"不确定"。techniques为数组，无则[]。replacement无则填空字符串""。不要输出JSON以外的任何文字。`;
+
+const $=id=>document.getElementById(id);
+let sentences=[];
+let results=[];
+let lastModel='';
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function splitSentences(text){
+  const m=text.match(/[^。！？!?；;\n]+[。！？!?；;]?/g)||[];
+  return m.map(s=>s.trim()).filter(s=>s.length>0);
+}
+
+function renderSplit(){
+  const list=$('splitList'); list.innerHTML='';
+  sentences.forEach((s,i)=>{
+    const li=document.createElement('li');
+    li.textContent=(i+1)+'. '+s;
+    list.appendChild(li);
+  });
+  $('splitCount').textContent=sentences.length?('（共 '+sentences.length+' 句）'):'';
+}
+
+$('fillDemo').addEventListener('click',()=>{
+  $('input').value='这款面膜全网销量第一，专柜价399今天直播间99！最后5分钟，错过再等一年，别犹豫了直接拍！100%正品保证！';
+});
+
+$('splitBtn').addEventListener('click',()=>{
+  sentences=splitSentences($('input').value);
+  results=[];
+  renderSplit();
+  $('resultArea').innerHTML='<p class="hint">已分句，点击“AI 检测”。</p>';
+});
+
+const savedKey=localStorage.getItem('ds_key');
+if(savedKey)$('apiKey').value=savedKey;
+$('saveKey').addEventListener('click',()=>{
+  const k=$('apiKey').value.trim();
+  if(k){localStorage.setItem('ds_key',k);$('keyStatus').textContent='已保存（仅本地）';}
+  else{localStorage.removeItem('ds_key');$('keyStatus').textContent='已清除';}
+});
+
+function parseResult(content){
+  let txt=String(content||'').trim();
+  txt=txt.replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,'');
+  let obj;
+  try{
+    obj=JSON.parse(txt);
+  }catch(e){
+    const m=txt.match(/\{[\s\S]*\}/);
+    if(!m)throw new Error('模型输出非JSON且无法提取JSON子串');
+    obj=JSON.parse(m[0]);
+  }
+  const arr=Array.isArray(obj)?obj:(obj&&obj.results?obj.results:null);
+  if(!arr)throw new Error('模型输出格式异常：未找到results数组');
+  return arr;
+}
+
+async function runDetect(){
+  if(!$('input').value.trim()){alert('请先粘贴话术');return;}
+  const key=localStorage.getItem('ds_key');
+  if(!key){alert('请先填写API Key并点“保存”');return;}
+  if(!sentences.length){alert('请先分句');return;}
+  const btn=$('runBtn'); btn.disabled=true; btn.textContent='检测中…';
+  const userContent=sentences.map((s,i)=>(i+1)+'. '+s).join('\n');
+  try{
+    const resp=await fetch(API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({
+        model:MODEL,
+        messages:[{role:'system',content:SYSTEM_PROMPT},{role:'user',content:userContent}],
+        stream:false,temperature:0.2,response_format:{type:'json_object'}
+      })
+    });
+    if(!resp.ok){
+      let msg='HTTP '+resp.status;
+      try{const e=await resp.json();msg=(e.error&&e.error.message)?e.error.message:msg;}catch(_){}
+      throw new Error(msg);
+    }
+    const data=await resp.json();
+    lastModel=data.model||'';
+    const content=data.choices&&data.choices[0]&&data.choices[0].message.content;
+    const arr=parseResult(content);
+    results=arr.map(r=>({id:r.id,text:r.text,constitutes:r.constitutes,techniques:r.techniques||[],reason:r.reason||'',replacement:r.replacement||'',status:'待确认'}));
+    renderResults();
+  }catch(err){
+    $('resultArea').innerHTML='<p class="err">检测失败：'+esc(err.message)+'</p>';
+  }finally{
+    btn.disabled=false; btn.textContent='AI 检测';
+  }
+}
+$('runBtn').addEventListener('click',runDetect);
+
+function renderResults(){
+  const area=$('resultArea'); area.innerHTML='';
+  let html='<div class="table-wrap"><table class="result-table"><thead><tr><th>句</th><th>原文</th><th>判定</th><th>手法</th><th>依据</th><th>替换建议</th><th>人工确认</th></tr></thead><tbody>';
+  results.forEach((r,i)=>{
+    html+='<tr data-i="'+i+'">'
+      +'<td>'+(r.id||(i+1))+'</td>'
+      +'<td class="txt">'+esc(r.text)+'</td>'
+      +'<td class="c-'+esc(r.constitutes)+'">'+esc(r.constitutes)+'</td>'
+      +'<td>'+esc(r.techniques.join('、'))+'</td>'
+      +'<td class="txt">'+esc(r.reason)+'</td>'
+      +'<td class="txt">'+esc(r.replacement)+'</td>'
+      +'<td><span class="chip" id="chip-'+i+'">待确认</span><button class="ok" data-act="ok">通过</button><button class="no" data-act="no">驳回</button></td>'
+      +'</tr>';
+  });
+  html+='</tbody></table></div>';
+  area.innerHTML=html;
+  area.querySelectorAll('button[data-act]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const tr=b.closest('tr'); const i=+tr.dataset.i; const act=b.dataset.act;
+      results[i].status=(act==='ok')?'已确认':'已驳回';
+      const chip=document.getElementById('chip-'+i);
+      chip.textContent=results[i].status;
+      chip.className='chip '+(act==='ok'?'chip-ok':'chip-no');
+    });
+  });
+}
+
+$('exportBtn').addEventListener('click',()=>{
+  if(!results.length){alert('没有可导出的结果');return;}
+  const lines=[];
+  lines.push('直播话术说服结构检测报告');
+  lines.push('工具：v1.3（对齐编码手册v0.4）');
+  lines.push('生成时间：'+new Date().toLocaleString('zh-CN'));
+  lines.push('API模型（请求）：'+MODEL);
+  lines.push('API模型（实际返回）：'+(lastModel||'未知'));
+  lines.push('');
+  results.forEach((r,i)=>{
+    const tech=r.techniques.join('、')||'无';
+    lines.push('【句子'+(r.id||(i+1))+'】'+r.text);
+    lines.push('  判定：'+r.constitutes+'　手法：'+tech);
+    lines.push('  依据：'+r.reason);
+    if(r.replacement)lines.push('  替换建议：'+r.replacement);
+    lines.push('  人工确认：'+r.status);
+    lines.push('');
+  });
+  lines.push('');
+  lines.push('本工具输出为话术说服结构提示，不构成法务意见或合规结论；检测结果需人工复核后使用。模型服务由DeepSeek提供。');
+  lines.push('提示词版本：v1.3｜编码手册：v0.4｜生成时间：'+new Date().toLocaleString('zh-CN'));
+  const blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='话术检测报告_'+Date.now()+'.txt';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+</script>
+</body>
 </html>
